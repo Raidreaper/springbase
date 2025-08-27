@@ -2,6 +2,9 @@ import PageLayout from "@/components/PageLayout";
 import PlaceholderSection from "@/components/PlaceholderSection";
 import Facilities from "@/components/Facilities";
 import ImageGallery from "@/components/ImageGallery";
+import Img0044 from "@/assets/IMG-20250811-WA0044.jpg";
+import Img0046 from "@/assets/IMG-20250811-WA0046.jpg";
+import Img0048 from "@/assets/IMG-20250811-WA0048.jpg";
 
 const FacilitiesPage = () => {
   return (
@@ -23,11 +26,7 @@ const FacilitiesPage = () => {
           <ImageGallery 
             title="Classrooms & Learning Spaces" 
             description="Interactive and well-equipped classrooms for every age group"
-            images={[
-              "/src/assets/IMG-20250811-WA0044.jpg",
-              "/src/assets/IMG-20250811-WA0046.jpg",
-              "/src/assets/IMG-20250811-WA0048.jpg"
-            ]}
+            images={[Img0044, Img0046, Img0048]}
             columns={2}
             aspectRatio="video"
           />

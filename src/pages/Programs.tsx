@@ -2,6 +2,7 @@ import PageLayout from "@/components/PageLayout";
 import PlaceholderSection from "@/components/PlaceholderSection";
 import Programs from "@/components/Programs";
 import ImageGallery from "@/components/ImageGallery";
+import Img0044 from "@/assets/IMG-20250811-WA0044.jpg";
 
 const ProgramsPage = () => {
   return (
@@ -14,9 +15,7 @@ const ProgramsPage = () => {
           <ImageGallery 
             title="Early Years Learning" 
             description="Montessori activities and foundational learning experiences"
-            images={[
-              "/src/assets/IMG-20250811-WA0044.jpg"
-            ]}
+            images={[Img0044]}
             columns={2}
             aspectRatio="square"
           />

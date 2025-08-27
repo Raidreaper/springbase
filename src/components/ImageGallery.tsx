@@ -1,5 +1,7 @@
 import { Camera, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 type ImageGalleryProps = {
   title: string;
@@ -47,6 +49,14 @@ const ImageGallery = ({
     );
   }
 
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const openLightbox = (index: number) => {
+    setActiveIndex(index);
+    setLightboxOpen(true);
+  };
+
   return (
     <Card className="card-elegant bg-card border-0 shadow-lg">
       <CardContent className="p-8">
@@ -66,7 +76,7 @@ const ImageGallery = ({
         {/* Image Grid */}
         <div className={`grid ${gridCols[columns]} gap-6`}>
           {images.map((src, index) => (
-            <div key={index} className="group">
+            <div key={index} className="group cursor-zoom-in" onClick={() => openLightbox(index)}>
               <div className={`${aspectClasses[aspectRatio]} relative overflow-hidden rounded-xl bg-gray-100 shadow-md transition-all duration-500 group-hover:shadow-2xl group-hover:scale-[1.02]`}>
                 <img 
                   src={src} 
@@ -102,6 +112,21 @@ const ImageGallery = ({
           </div>
         </div>
       </CardContent>
+
+      {/* Lightbox Dialog */}
+      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+        <DialogContent className="max-w-5xl bg-black/90 border-0 p-0">
+          {activeIndex !== null && (
+            <div className="relative w-full h-full p-2 sm:p-4">
+              <img
+                src={images[activeIndex]}
+                alt={`${title} image ${activeIndex + 1}`}
+                className="w-full h-full object-contain max-h-[80vh]"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

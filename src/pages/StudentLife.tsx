@@ -2,6 +2,11 @@ import PageLayout from "@/components/PageLayout";
 import PlaceholderSection from "@/components/PlaceholderSection";
 import StudentLife from "@/components/StudentLife";
 import ImageGallery from "@/components/ImageGallery";
+import Img0045 from "@/assets/IMG-20250811-WA0045.jpg";
+import Img0049 from "@/assets/IMG-20250811-WA0049.jpg";
+import Img0050 from "@/assets/IMG-20250811-WA0050.jpg";
+import Img0052 from "@/assets/IMG-20250811-WA0052.jpg";
+import Img0053 from "@/assets/IMG-20250811-WA0053.jpg";
 
 const StudentLifePage = () => {
   return (
@@ -14,13 +19,7 @@ const StudentLifePage = () => {
           <ImageGallery 
             title="Student Activities & Events" 
             description="Capturing memorable moments from school events and celebrations"
-            images={[
-              "/src/assets/IMG-20250811-WA0045.jpg",
-              "/src/assets/IMG-20250811-WA0049.jpg", 
-              "/src/assets/IMG-20250811-WA0050.jpg",
-              "/src/assets/IMG-20250811-WA0052.jpg",
-              "/src/assets/IMG-20250811-WA0053.jpg"
-            ]}
+            images={[Img0045, Img0049, Img0050, Img0052, Img0053]}
             columns={3}
             aspectRatio="square"
           />
