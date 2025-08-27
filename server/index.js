@@ -9,7 +9,39 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+// Configure CORS to explicitly allow the deployed frontend and local dev
+const allowedOrigins = [
+  "https://springbase.vercel.app",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
+const corsOptions = {
+  origin(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl) and same-origin
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+  ],
+  credentials: false,
+  optionsSuccessStatus: 204,
+  maxAge: 600,
+};
+
+app.use(cors(corsOptions));
+// Explicitly handle preflight for all routes
+app.options("*", cors(corsOptions));
+// Helpful for proxies/CDNs when varying by Origin
+app.use((req, res, next) => {
+  res.header("Vary", "Origin");
+  next();
+});
 app.use(bodyParser.json());
 
 app.get("/api/health", (_req, res) => {
