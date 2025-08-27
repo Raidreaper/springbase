@@ -6,11 +6,16 @@ export function createTransporter() {
   const user = process.env.SMTP_USER || "info@springbase.com.ng";
   const pass = process.env.SMTP_PASS || "";
 
+  // Use secure for 465, STARTTLS for 587
+  const isSecure = port === 465;
+
   return nodemailer.createTransport({
     host,
     port,
-    secure: true,
+    secure: isSecure,
     auth: { user, pass },
+    // Some shared hosts require explicit TLS options on 587
+    tls: isSecure ? undefined : { rejectUnauthorized: false },
   });
 }
 

@@ -1,7 +1,7 @@
 import { Camera, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 type ImageGalleryProps = {
   title: string;
@@ -116,6 +116,9 @@ const ImageGallery = ({
       {/* Lightbox Dialog */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
         <DialogContent className="max-w-5xl bg-black/90 border-0 p-0">
+          <DialogTitle className="sr-only">
+            {title} - Image {activeIndex !== null ? activeIndex + 1 : ''}
+          </DialogTitle>
           {activeIndex !== null && (
             <div className="relative w-full h-full p-2 sm:p-4">
               <img

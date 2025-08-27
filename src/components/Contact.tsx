@@ -3,9 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 import Map from "./Map";
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
   const contactInfo = [
     {
       icon: <Phone className="h-6 w-6" />,
@@ -43,6 +47,45 @@ const Contact = () => {
       secondary: "Saturday: 9:00 AM - 2:00 PM"
     }
   ];
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      const form = e.currentTarget as HTMLFormElement;
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+
+      // Validate required fields
+      if (!payload.firstName || !payload.email || !payload.message) {
+        throw new Error("Please fill in all required fields");
+      }
+
+      const { getApiUrl } = await import("@/lib/api");
+      const res = await fetch(getApiUrl('/contact'), { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
+      }
+
+      form.reset();
+      setSubmitStatus("success");
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setSubmitStatus("error");
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section id="contact" className="py-20 bg-background">
@@ -107,27 +150,30 @@ const Contact = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form className="space-y-6" onSubmit={async (e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget as HTMLFormElement;
-                  const formData = new FormData(form);
-                  const payload = Object.fromEntries(formData.entries());
-                  try {
-                    const { getApiUrl } = await import("@/lib/api");
-                    const res = await fetch(getApiUrl('/contact'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                    if (!res.ok) throw new Error('Failed');
-                    form.reset();
-                    alert('Message sent successfully. We will get back to you shortly.');
-                  } catch (err) {
-                    alert('Failed to send message. Please try again.');
-                  }
-                }}>
+                {/* Status Messages */}
+                {submitStatus === "success" && (
+                  <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200">
+                    <p className="text-green-800 text-center font-medium">
+                      ✓ Message sent successfully! We will get back to you shortly.
+                    </p>
+                  </div>
+                )}
+                
+                {submitStatus === "error" && (
+                  <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-200">
+                    <p className="text-red-800 text-center font-medium">
+                      ✗ Failed to send message. Please try again or contact us directly.
+                    </p>
+                  </div>
+                )}
+
+                <form className="space-y-6" onSubmit={handleSubmit}>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-charcoal mb-2">
-                        First Name
+                        First Name *
                       </label>
-                      <Input name="firstName" placeholder="Your first name" />
+                      <Input name="firstName" placeholder="Your first name" required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-charcoal mb-2">
@@ -139,9 +185,9 @@ const Contact = () => {
                   
                   <div>
                     <label className="block text-sm font-medium text-charcoal mb-2">
-                      Email Address
+                      Email Address *
                     </label>
-                    <Input name="email" type="email" placeholder="your.email@example.com" />
+                    <Input name="email" type="email" placeholder="your.email@example.com" required />
                   </div>
                   
                   <div>
@@ -160,37 +206,52 @@ const Contact = () => {
                   
                   <div>
                     <label className="block text-sm font-medium text-charcoal mb-2">
-                      Message
+                      Message *
                     </label>
                     <Textarea 
                       name="message"
                       placeholder="Tell us about your interest in Springbase Schools..."
                       rows={5}
+                      required
                     />
                   </div>
                   
-                  <Button className="w-full accent-gradient text-white" size="lg">
-                    Send Message
-                    <Send className="ml-2 h-5 w-5" />
+                  <Button 
+                    type="submit"
+                    className="w-full accent-gradient text-white" 
+                    size="lg"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Send Message
+                        <Send className="ml-2 h-5 w-5" />
+                      </>
+                    )}
                   </Button>
                 </form>
                 
-                                 <div className="mt-6 p-4 rounded-lg bg-muted/50">
-                   <p className="text-sm text-muted-foreground text-center">
-                     We typically respond to inquiries within 24 hours during business days.
-                   </p>
-                 </div>
-                 
-                 {/* Schedule Campus Tour Button */}
-                 <div className="mt-6 text-center">
-                   <Button 
-                     variant="outline" 
-                     className="bg-gray-500 hover:bg-gray-600 text-white border-gray-500 hover:border-gray-600"
-                     onClick={() => window.location.href = '/schedule-tour'}
-                   >
-                     Schedule Campus Tour
-                   </Button>
-                 </div>
+                <div className="mt-6 p-4 rounded-lg bg-muted/50">
+                  <p className="text-sm text-muted-foreground text-center">
+                    We typically respond to inquiries within 24 hours during business days.
+                  </p>
+                </div>
+                
+                {/* Schedule Campus Tour Button */}
+                <div className="mt-6 text-center">
+                  <Button 
+                    variant="outline" 
+                    className="bg-gray-500 hover:bg-gray-600 text-white border-gray-500 hover:border-gray-600"
+                    onClick={() => window.location.href = '/schedule-tour'}
+                  >
+                    Schedule Campus Tour
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

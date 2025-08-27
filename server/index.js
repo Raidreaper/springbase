@@ -12,9 +12,12 @@ const port = process.env.PORT || 5000;
 // Configure CORS to explicitly allow the deployed frontend and local dev
 const allowedOrigins = [
   "https://springbase.vercel.app",
+  "http://springbase.com.ng",
+  "https://springbase.com.ng",
+  process.env.APP_ORIGIN || "",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-];
+].filter(Boolean);
 
 const corsOptions = {
   origin(origin, callback) {
@@ -56,9 +59,31 @@ app.get("/api/config/status", (_req, res) => {
 
 app.post("/api/contact", async (req, res) => {
   try {
+    // Check if we're in development mode and allow test emails
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      return res.status(500).json({ ok: false, error: "SMTP credentials not configured" });
+      if (isDevelopment) {
+        // In development, just log the email content and return success
+        console.log('=== DEVELOPMENT MODE: Email would be sent ===');
+        console.log('To:', process.env.SCHOOL_TO_EMAIL || "info@springbase.com.ng");
+        console.log('Subject:', `New website inquiry from ${req.body.firstName || ""} ${req.body.lastName || ""}`);
+        console.log('Body:', req.body);
+        console.log('==========================================');
+        
+        return res.json({ 
+          ok: true, 
+          message: "Development mode - email logged to console",
+          data: req.body 
+        });
+      }
+      
+      return res.status(500).json({ 
+        ok: false, 
+        error: "SMTP credentials not configured. Please set SMTP_USER and SMTP_PASS environment variables." 
+      });
     }
+    
     const { firstName, lastName, email, phone, gradeLevel, message } = req.body || {};
     const transporter = createTransporter();
 
@@ -82,16 +107,38 @@ app.post("/api/contact", async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.error(err);
+    console.error('Contact form error:', err);
     res.status(500).json({ ok: false, error: "Failed to send message" });
   }
 });
 
 app.post("/api/schedule-tour", async (req, res) => {
   try {
+    // Check if we're in development mode and allow test emails
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      return res.status(500).json({ ok: false, error: "SMTP credentials not configured" });
+      if (isDevelopment) {
+        // In development, just log the tour request and return success
+        console.log('=== DEVELOPMENT MODE: Tour request would be sent ===');
+        console.log('To:', process.env.SCHOOL_TO_EMAIL || "mailinfo@springbase.com.ng");
+        console.log('Subject:', `Tour Request - ${req.body.parentName} (${req.body.preferredDate} ${req.body.preferredTime})`);
+        console.log('Body:', req.body);
+        console.log('==========================================');
+        
+        return res.json({ 
+          ok: true, 
+          message: "Development mode - tour request logged to console",
+          data: req.body 
+        });
+      }
+      
+      return res.status(500).json({ 
+        ok: false, 
+        error: "SMTP credentials not configured. Please set SMTP_USER and SMTP_PASS environment variables." 
+      });
     }
+    
     const { parentName, email, phone, preferredDate, preferredTime, notes } = req.body || {};
     const transporter = createTransporter();
 
@@ -134,7 +181,7 @@ app.post("/api/schedule-tour", async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.error(err);
+    console.error('Tour request error:', err);
     res.status(500).json({ ok: false, error: "Failed to schedule tour" });
   }
 });
