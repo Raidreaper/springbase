@@ -117,6 +117,14 @@ const Admissions = () => {
                     <div>Rolling Admissions: Available</div>
                   </div>
                 </div>
+                
+                <div className="mt-6 p-4 rounded-lg bg-muted/50">
+                  <h5 className="font-semibold text-charcoal mb-2">Admissions Contact</h5>
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <div>Ask me about admissions: <span className="font-medium">Mrs OBANIWA</span>, Administrator</div>
+                    <div>Phone: <span className="font-medium">0701 082 1938</span></div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -133,17 +141,17 @@ const Admissions = () => {
                 </p>
                 
                 <div className="space-y-4">
-                  <Button variant="secondary" size="lg" className="w-full">
+                  <Button variant="secondary" size="lg" className="w-full" onClick={() => (window.location.href = '/admissions')}>
                     Start Application
                   </Button>
-                  <Button variant="outline" size="lg" className="w-full border-white text-white hover:bg-white hover:text-sage">
+                  <Button variant="outline" size="lg" className="w-full bg-gray-500 hover:bg-gray-600 text-white border-gray-500 hover:border-gray-600" onClick={() => (window.location.href = '/schedule-tour')}>
                     Schedule Campus Tour
                   </Button>
                 </div>
                 
                 <div className="mt-6 text-center">
                   <p className="text-sm opacity-75">
-                    Questions? Call us at <span className="font-semibold">(555) 123-4567</span>
+                    Questions? Call us at <a href="tel:+2347010821938" className="font-semibold underline">0701 082 1938</a>
                   </p>
                 </div>
               </CardContent>

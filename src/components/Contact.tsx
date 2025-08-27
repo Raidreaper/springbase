@@ -3,26 +3,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import Map from "./Map";
 
 const Contact = () => {
   const contactInfo = [
     {
       icon: <Phone className="h-6 w-6" />,
       title: "Phone",
-      details: "(555) 123-4567",
-      secondary: "Admissions: (555) 123-4568"
+      details: (
+        <a href="tel:+2347010821938" className="underline text-sage hover:text-sage/80">
+          0701 082 1938
+        </a>
+      ),
+      secondary: (
+        <a href="tel:+2347010821938" className="underline text-sage hover:text-sage/80">
+          Admissions: 0701 082 1938
+        </a>
+      )
     },
     {
       icon: <Mail className="h-6 w-6" />,
       title: "Email",
-      details: "info@springbaseschools.edu",
-      secondary: "admissions@springbaseschools.edu"
+      details: (
+        <a href="mailto:info@springbase.com.ng" className="underline text-sage hover:text-sage/80">
+          info@springbase.com.ng
+        </a>
+      )
     },
     {
       icon: <MapPin className="h-6 w-6" />,
       title: "Address",
-      details: "123 Education Drive",
-      secondary: "Spring Valley, CA 90210"
+      details: "21 Canal View Off Community Road Ago",
+      secondary: "Okota Lagos, Lagos State"
     },
     {
       icon: <Clock className="h-6 w-6" />,
@@ -82,22 +94,8 @@ const Contact = () => {
               ))}
             </div>
 
-            {/* Map Placeholder */}
-            <Card className="card-elegant bg-card border-0">
-              <CardContent className="p-6">
-                <div className="aspect-video rounded-lg bg-gradient-to-br from-sage/20 to-lotus/20 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-12 w-12 text-sage mx-auto mb-3" />
-                    <h4 className="font-semibold text-charcoal mb-2">
-                      Visit Our Campus
-                    </h4>
-                    <p className="text-muted-foreground text-sm">
-                      Interactive map coming soon
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Interactive Map */}
+            <Map />
           </div>
 
           {/* Contact Form */}
@@ -109,19 +107,32 @@ const Contact = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={async (e) => {
+                  e.preventDefault();
+                  const form = e.currentTarget as HTMLFormElement;
+                  const formData = new FormData(form);
+                  const payload = Object.fromEntries(formData.entries());
+                  try {
+                    const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!res.ok) throw new Error('Failed');
+                    form.reset();
+                    alert('Message sent successfully. We will get back to you shortly.');
+                  } catch (err) {
+                    alert('Failed to send message. Please try again.');
+                  }
+                }}>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-charcoal mb-2">
                         First Name
                       </label>
-                      <Input placeholder="Your first name" />
+                      <Input name="firstName" placeholder="Your first name" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-charcoal mb-2">
                         Last Name
                       </label>
-                      <Input placeholder="Your last name" />
+                      <Input name="lastName" placeholder="Your last name" />
                     </div>
                   </div>
                   
@@ -129,21 +140,21 @@ const Contact = () => {
                     <label className="block text-sm font-medium text-charcoal mb-2">
                       Email Address
                     </label>
-                    <Input type="email" placeholder="your.email@example.com" />
+                    <Input name="email" type="email" placeholder="your.email@example.com" />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-charcoal mb-2">
                       Phone Number
                     </label>
-                    <Input type="tel" placeholder="(555) 123-4567" />
+                    <Input name="phone" type="tel" placeholder="0701 082 1938" />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-charcoal mb-2">
                       Student Grade Level (if applicable)
                     </label>
-                    <Input placeholder="e.g., Pre-K, Grade 3, Grade 8" />
+                    <Input name="gradeLevel" placeholder="e.g., Pre-K, Grade 3, Grade 8" />
                   </div>
                   
                   <div>
@@ -151,6 +162,7 @@ const Contact = () => {
                       Message
                     </label>
                     <Textarea 
+                      name="message"
                       placeholder="Tell us about your interest in Springbase Schools..."
                       rows={5}
                     />
@@ -162,11 +174,22 @@ const Contact = () => {
                   </Button>
                 </form>
                 
-                <div className="mt-6 p-4 rounded-lg bg-muted/50">
-                  <p className="text-sm text-muted-foreground text-center">
-                    We typically respond to inquiries within 24 hours during business days.
-                  </p>
-                </div>
+                                 <div className="mt-6 p-4 rounded-lg bg-muted/50">
+                   <p className="text-sm text-muted-foreground text-center">
+                     We typically respond to inquiries within 24 hours during business days.
+                   </p>
+                 </div>
+                 
+                 {/* Schedule Campus Tour Button */}
+                 <div className="mt-6 text-center">
+                   <Button 
+                     variant="outline" 
+                     className="bg-gray-500 hover:bg-gray-600 text-white border-gray-500 hover:border-gray-600"
+                     onClick={() => window.location.href = '/schedule-tour'}
+                   >
+                     Schedule Campus Tour
+                   </Button>
+                 </div>
               </CardContent>
             </Card>
           </div>

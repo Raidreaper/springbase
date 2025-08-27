@@ -2,18 +2,20 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import springbaseLogo from "@/assets/springbase-logo.png";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Programs", href: "#programs" },
-    { name: "Facilities", href: "#facilities" },
-    { name: "Admissions", href: "#admissions" },
-    { name: "Student Life", href: "#student-life" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", to: "/" },
+    { name: "About", to: "/about" },
+    { name: "Programs", to: "/programs" },
+    { name: "Facilities", to: "/facilities" },
+    { name: "Admissions", to: "/admissions" },
+    { name: "Student Life", to: "/student-life" },
+    { name: "Contact", to: "/contact" },
+    { name: "Schedule Tour", to: "/schedule-tour" },
   ];
 
   return (
@@ -32,16 +34,16 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.to}
                 className="text-foreground hover:text-accent transition-colors duration-200 font-medium"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
-            <Button variant="default" className="ml-4">
-              Apply Now
+            <Button asChild variant="default" className="ml-4">
+              <Link to="/admissions">Apply Now</Link>
             </Button>
           </div>
 
@@ -62,18 +64,18 @@ const Navigation = () => {
           <div className="md:hidden pb-6">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.to}
                   className="block px-3 py-2 text-foreground hover:text-accent transition-colors duration-200"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
               <div className="pt-4">
-                <Button variant="default" className="w-full">
-                  Apply Now
+                <Button asChild variant="default" className="w-full" onClick={() => setIsOpen(false)}>
+                  <Link to="/admissions">Apply Now</Link>
                 </Button>
               </div>
             </div>

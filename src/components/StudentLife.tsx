@@ -13,19 +13,19 @@ const StudentLife = () => {
       icon: <Music className="h-8 w-8 text-sage" />,
       title: "Performing Arts",
       description: "Music, theater, and dance programs that build confidence and creative expression.",
-      highlights: ["School Orchestra", "Drama Club", "Choir", "Dance Ensemble"]
+      highlights: ["Special Music Class", "Music & Drama", "Choir", "Ballet"]
     },
     {
       icon: <Palette className="h-8 w-8 text-lotus" />,
       title: "Creative Arts",
       description: "Visual arts programs fostering creativity and artistic skills across various mediums.",
-      highlights: ["Art Studio", "Photography", "Ceramics", "Digital Design"]
+      highlights: ["Colour Day", "Art Studio", "Photography", "Digital Design"]
     },
     {
       icon: <Users className="h-8 w-8 text-sage" />,
       title: "Student Leadership",
       description: "Opportunities to develop leadership skills through student government and peer programs.",
-      highlights: ["Student Council", "Peer Mentoring", "Class Representatives", "Club Presidents"]
+      highlights: ["Etiquette (Teaching)", "Student Council", "Peer Mentoring", "Class Representatives"]
     },
     {
       icon: <Globe className="h-8 w-8 text-lotus" />,

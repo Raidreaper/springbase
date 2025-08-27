@@ -4,24 +4,24 @@ import { Card, CardContent } from "@/components/ui/card";
 const About = () => {
   const values = [
     {
-      icon: <Flower className="h-8 w-8 text-lotus" />,
-      title: "Growth & Development",
-      description: "Like the lotus flower, we believe every student has the potential to rise and bloom into greatness."
+      icon: <Heart className="h-8 w-8 text-lotus" />,
+      title: "Godliness & Care",
+      description: "We cultivate godly character, empathy, and genuine care for others in daily learning."
     },
     {
       icon: <Target className="h-8 w-8 text-sage" />,
       title: "Academic Excellence",
-      description: "We maintain the highest standards of education, ensuring every student achieves their full potential."
+      description: "A citadel of excellence where high expectations meet effective teaching and support."
     },
     {
-      icon: <Heart className="h-8 w-8 text-lotus" />,
-      title: "Nurturing Environment",
-      description: "Our caring community supports each student's emotional, social, and intellectual development."
+      icon: <Flower className="h-8 w-8 text-lotus" />,
+      title: "Respect & Creativity",
+      description: "We model mutual respect and inspire creativity through hands‑on, joyful learning."
     },
     {
       icon: <Star className="h-8 w-8 text-sage" />,
-      title: "Character Building",
-      description: "We instill values of integrity, respect, and responsibility that last a lifetime."
+      title: "Leadership Responsibility",
+      description: "Learners are guided to take responsibility and lead with integrity in school and beyond."
     }
   ];
 
@@ -37,6 +37,20 @@ const About = () => {
             Founded on the principle that every child deserves the opportunity to flourish, 
             Springbase Schools has been nurturing young minds for over two decades.
           </p>
+        </div>
+
+        {/* Why Springbase */}
+        <div className="mb-16 slide-up">
+          <Card className="card-elegant bg-card border-0">
+            <CardContent className="p-8 lg:p-12">
+              <h3 className="text-2xl lg:text-3xl font-heading font-bold text-charcoal mb-4">
+                Why Springbase School, Okota Lagos?
+              </h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Springbase School is a life‑training center and a citadel of academic excellence. We inculcate life‑long values of godliness, care, respect, creativity, excellence, and taking responsibility for leadership. We ensure an effective and smooth transition of children from home to school as they grow to become confident, compassionate achievers.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Mission Statement */}

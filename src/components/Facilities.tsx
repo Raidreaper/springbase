@@ -9,6 +9,11 @@ const Facilities = () => {
       description: "State-of-the-art learning spaces equipped with interactive technology and comfortable furniture designed for collaborative learning."
     },
     {
+      icon: <Computer className="h-8 w-8 text-lotus" />,
+      title: "Standard ICT Centre",
+      description: "Up-to-date ICT lab for digital literacy, coding basics, and safe technology exploration."
+    },
+    {
       icon: <FlaskConical className="h-8 w-8 text-lotus" />,
       title: "Science Laboratories",
       description: "Fully equipped labs for chemistry, biology, and physics experiments, fostering hands-on scientific discovery."
@@ -27,6 +32,21 @@ const Facilities = () => {
       icon: <Utensils className="h-8 w-8 text-sage" />,
       title: "Dining Hall",
       description: "Spacious cafeteria serving nutritious, freshly prepared meals with options for various dietary requirements."
+    },
+    {
+      icon: <Heart className="h-8 w-8 text-sage" />,
+      title: "Sick Bay",
+      description: "On‑site basic health bay for first‑aid and student wellness support."
+    },
+    {
+      icon: <Building className="h-8 w-8 text-lotus" />,
+      title: "School Bus Service",
+      description: "Reliable school transport service with safety‑first routing and supervision."
+    },
+    {
+      icon: <Utensils className="h-8 w-8 text-sage" />,
+      title: "Lunch Programme",
+      description: "Balanced meal programme available for learners during the school day."
     },
     {
       icon: <Heart className="h-8 w-8 text-lotus" />,

@@ -49,15 +49,19 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-gray-300">
                 <Phone className="h-4 w-4 text-sage" />
-                <span className="text-sm">(555) 123-4567</span>
+                <a href="tel:+2347010821938" className="text-sm underline hover:text-sage">
+                  0701 082 1938
+                </a>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <Mail className="h-4 w-4 text-sage" />
-                <span className="text-sm">info@springbaseschools.edu</span>
+                <a href="mailto:info@springbase.com.ng" className="text-sm underline hover:text-sage">
+                  info@springbase.com.ng
+                </a>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <MapPin className="h-4 w-4 text-sage" />
-                <span className="text-sm">123 Education Drive, Spring Valley, CA</span>
+                <span className="text-sm">21 Canal View Off Community Road Ago, Okota Lagos</span>
               </div>
             </div>
           </div>

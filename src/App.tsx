@@ -5,6 +5,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { lazy, Suspense } from "react";
+const AboutPage = lazy(() => import("./pages/About"));
+const ProgramsPage = lazy(() => import("./pages/Programs"));
+const FacilitiesPage = lazy(() => import("./pages/Facilities"));
+const AdmissionsPage = lazy(() => import("./pages/Admissions"));
+const StudentLifePage = lazy(() => import("./pages/StudentLife"));
+const ContactPage = lazy(() => import("./pages/Contact"));
+const ScheduleTourPage = lazy(() => import("./pages/ScheduleTour"));
 
 const queryClient = new QueryClient();
 
@@ -14,11 +22,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="pt-28 text-center text-muted-foreground">Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/programs" element={<ProgramsPage />} />
+            <Route path="/facilities" element={<FacilitiesPage />} />
+            <Route path="/admissions" element={<AdmissionsPage />} />
+            <Route path="/student-life" element={<StudentLifePage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/schedule-tour" element={<ScheduleTourPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -57,8 +57,8 @@ const Programs = () => {
             Academic <span className="text-sage">Programs</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Our comprehensive curriculum is designed to challenge, inspire, and prepare 
-            students for academic success and lifelong learning.
+            Rooted in the Montessori approach for early years and a strong primary curriculum, 
+            our programs challenge, inspire, and prepare learners for lifelong success.
           </p>
         </div>
 
@@ -111,7 +111,7 @@ const Programs = () => {
               <p className="text-lg mb-6 opacity-90">
                 Schedule a consultation to learn how our programs can nurture your child's unique talents and interests.
               </p>
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="lg" onClick={() => (window.location.href = '/contact')}>
                 Schedule Consultation
               </Button>
             </CardContent>

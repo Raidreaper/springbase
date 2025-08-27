@@ -10,11 +10,7 @@ const Hero = () => {
           {/* Left Content */}
           <div className="fade-in">
             <div className="flex items-center space-x-3 mb-6">
-              <img 
-                src={springbaseLogo} 
-                alt="Springbase Schools" 
-                className="h-16 w-auto lotus-bloom"
-              />
+              
             </div>
             
             <h1 className="text-5xl lg:text-6xl font-heading font-bold text-charcoal mb-6 leading-tight">
@@ -25,17 +21,22 @@ const Hero = () => {
             </h1>
             
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              At Springbase Schools, we nurture young minds like the lotus flower - 
-              growing from humble beginnings to bloom into extraordinary potential. 
-              Discover excellence in education where every student thrives.
+              Springbase School, Okota, is a life‑training center and citadel of academic excellence. 
+              We instill godliness, care, respect, creativity, excellence, and leadership responsibility—
+              ensuring a smooth transition from home to school and a joyful journey to greatness.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Button size="lg" className="accent-gradient text-white">
+              <Button size="lg" className="accent-gradient text-white" onClick={() => (window.location.href = '/programs')}>
                 Explore Programs
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="bg-gray-500 hover:bg-gray-600 text-white border-gray-500 hover:border-gray-600"
+                onClick={() => window.location.href = '/schedule-tour'}
+              >
                 Schedule a Tour
               </Button>
             </div>
