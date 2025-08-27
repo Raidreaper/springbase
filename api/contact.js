@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -19,8 +19,8 @@ module.exports = async function handler(req, res) {
 
     // Validate required fields
     if (!firstName || !email || !message) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: firstName, email, and message are required' 
+      return res.status(400).json({
+        error: 'Missing required fields: firstName, email, and message are required'
       });
     }
 
@@ -56,10 +56,10 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ success: true, message: 'Email sent successfully' });
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({ 
-      error: 'Failed to send message. Please try again or contact us directly.' 
+    res.status(500).json({
+      error: 'Failed to send message. Please try again or contact us directly.'
     });
   }
-};
+}
 
 
