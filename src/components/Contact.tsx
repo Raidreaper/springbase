@@ -113,7 +113,8 @@ const Contact = () => {
                   const formData = new FormData(form);
                   const payload = Object.fromEntries(formData.entries());
                   try {
-                    const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    const { getApiUrl } = await import("@/lib/api");
+                    const res = await fetch(getApiUrl('/contact'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                     if (!res.ok) throw new Error('Failed');
                     form.reset();
                     alert('Message sent successfully. We will get back to you shortly.');

@@ -1,4 +1,5 @@
 import PageLayout from "@/components/PageLayout";
+import { getApiUrl } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +24,7 @@ const ScheduleTourPage = () => {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/schedule-tour", {
+      const res = await fetch(getApiUrl("/schedule-tour"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
