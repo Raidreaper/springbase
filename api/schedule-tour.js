@@ -9,9 +9,18 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
+    // Check if required environment variables are set
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      console.error('Missing SMTP credentials in environment variables');
+      return res.status(500).json({ 
+        error: 'Email service not configured. Please contact support.' 
+      });
+    }
+
     const { parentName, parentEmail, parentPhone, childName, childAge, preferredDate, preferredTime, additionalInfo, email, phone, notes } = req.body || {};
     const effectiveEmail = parentEmail || email;
     const effectivePhone = parentPhone || phone;
+    
     if (!parentName || !effectiveEmail || !preferredDate || !preferredTime) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
@@ -27,11 +36,19 @@ export default async function handler(req, res) {
       tls: { rejectUnauthorized: false }
     });
 
-    await transporter.verify();
+    // Test the connection
+    try {
+      await transporter.verify();
+    } catch (verifyError) {
+      console.error('SMTP connection verification failed:', verifyError);
+      return res.status(500).json({ 
+        error: 'Email service temporarily unavailable. Please try again later.' 
+      });
+    }
 
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style=\"color: #2c5530;\">New School Tour Request</h2>
+        <h2 style="color: #2c5530;">New School Tour Request</h2>
         <div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
           <h3>Parent Information</h3>
           <p><strong>Name:</strong> ${parentName}</p>
@@ -43,7 +60,7 @@ export default async function handler(req, res) {
           <h3>Tour Preferences</h3>
           <p><strong>Preferred Date:</strong> ${preferredDate}</p>
           <p><strong>Preferred Time:</strong> ${preferredTime}</p>
-          ${(additionalInfo || notes) ? `<h3>Additional Information</h3><div style=\"background: white; padding: 15px; border-left: 4px solid #2c5530;\">${(additionalInfo || notes).replace(/\n/g, '<br>')}</div>` : ''}
+          ${(additionalInfo || notes) ? `<h3>Additional Information</h3><div style="background: white; padding: 15px; border-left: 4px solid #2c5530;">${(additionalInfo || notes).replace(/\n/g, '<br>')}</div>` : ''}
         </div>
       </div>
     `;
@@ -56,12 +73,38 @@ export default async function handler(req, res) {
       html
     });
 
-    return res.status(200).json({ success: true, message: 'Tour request submitted', messageId: info?.messageId });
+    console.log('Tour request email sent successfully:', info.messageId);
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Tour request submitted successfully', 
+      messageId: info?.messageId 
+    });
+    
   } catch (error) {
+    console.error('Schedule tour API error:', error);
+    
     let errorMessage = 'Failed to submit tour request';
-    if (error?.code === 'EAUTH') errorMessage = 'SMTP authentication failed';
-    if (error?.code === 'ECONNECTION') errorMessage = 'Could not connect to SMTP server';
-    return res.status(500).json({ error: errorMessage });
+    let statusCode = 500;
+    
+    if (error?.code === 'EAUTH') {
+      errorMessage = 'Email service authentication failed';
+      statusCode = 500;
+    } else if (error?.code === 'ECONNECTION') {
+      errorMessage = 'Could not connect to email service';
+      statusCode = 500;
+    } else if (error?.code === 'ENOTFOUND') {
+      errorMessage = 'Email service host not found';
+      statusCode = 500;
+    } else if (error?.code === 'ETIMEDOUT') {
+      errorMessage = 'Email service connection timeout';
+      statusCode = 500;
+    }
+    
+    return res.status(statusCode).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }
 

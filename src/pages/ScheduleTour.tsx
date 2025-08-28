@@ -18,7 +18,23 @@ const ScheduleTourPage = () => {
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
 
-    if (!payload.parentName || !payload.email || !payload.preferredDate || !payload.preferredTime) {
+    // Map form fields to API expected fields
+    const apiPayload = {
+      parentName: payload.parentName,
+      parentEmail: payload.email, // Map email to parentEmail
+      parentPhone: payload.phone, // Map phone to parentPhone
+      childName: payload.childName,
+      childAge: payload.childAge,
+      preferredDate: payload.preferredDate,
+      preferredTime: payload.preferredTime,
+      additionalInfo: payload.notes, // Map notes to additionalInfo
+      // Keep original fields for backward compatibility
+      email: payload.email,
+      phone: payload.phone,
+      notes: payload.notes
+    };
+
+    if (!apiPayload.parentName || !apiPayload.parentEmail || !apiPayload.preferredDate || !apiPayload.preferredTime) {
       toast({ title: "Missing information", description: "Please fill all required fields." });
       return;
     }
@@ -28,7 +44,7 @@ const ScheduleTourPage = () => {
       const res = await fetch(getApiUrl("/schedule-tour"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(apiPayload),
       });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
@@ -41,6 +57,7 @@ const ScheduleTourPage = () => {
       toast({ title: "Request received", description: "We emailed you a calendar invite and will confirm shortly." });
       form.reset();
     } catch (err) {
+      console.error('Tour submission error:', err);
       toast({ title: "Error", description: "Could not schedule the tour. Please try again." });
     } finally {
       setIsSubmitting(false);
@@ -69,6 +86,16 @@ const ScheduleTourPage = () => {
               <div>
                 <label className="block text-sm font-medium text-charcoal mb-2">Phone</label>
                 <Input name="phone" placeholder="Optional" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-2">Child's Name</label>
+                <Input name="childName" placeholder="Child's full name" />
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-2">Child's Age</label>
+                <Input name="childAge" type="number" placeholder="Age" min="1" max="18" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-charcoal mb-2">Preferred Date</label>
