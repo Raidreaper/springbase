@@ -1,22 +1,16 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: { mode: string }) => ({
   server: {
-    host: "::",
-    port: 4173, // Match the port you're using
-  },
-  preview: {
-    port: 4173,
-    host: "::",
+    port: 3000,
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -25,14 +19,6 @@ export default defineConfig(({ mode }: { mode: string }) => ({
   },
   build: {
     outDir: "dist",
-    assetsDir: "assets",
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-label', '@radix-ui/react-select'],
-        },
-      },
-    },
+    sourcemap: true,
   },
 }));
