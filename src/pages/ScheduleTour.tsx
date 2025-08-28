@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import Turnstile from "@/components/Turnstile";
 import { useToast } from "@/components/ui/use-toast";
 
 const ScheduleTourPage = () => {
@@ -29,7 +30,14 @@ const ScheduleTourPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Request failed");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        const msg = errorData.error || `HTTP ${res.status}: ${res.statusText}`;
+        if (res.status === 400) throw new Error(msg);
+        if (res.status === 403) throw new Error('Request blocked: origin not allowed.');
+        if (res.status === 429) throw new Error('Too many requests. Please try again later.');
+        throw new Error(msg);
+      }
       toast({ title: "Request received", description: "We emailed you a calendar invite and will confirm shortly." });
       form.reset();
     } catch (err) {
@@ -80,6 +88,9 @@ const ScheduleTourPage = () => {
             <div className="hidden" aria-hidden="true">
               <Input name="website" tabIndex={-1} autoComplete="off" />
             </div>
+            {import.meta.env.VITE_TURNSTILE_SITEKEY && (
+              <Turnstile className="mt-2" />
+            )}
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Submit Tour Request"}
             </Button>

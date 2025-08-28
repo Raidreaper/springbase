@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { getApiUrl } from "@/lib/api";
 import Map from "./Map";
+import Turnstile from "./Turnstile";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +65,6 @@ const Contact = () => {
         throw new Error("Please fill in all required fields");
       }
 
-      const { getApiUrl } = await import("@/lib/api");
       const res = await fetch(getApiUrl('/contact'), { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
@@ -72,7 +73,11 @@ const Contact = () => {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
+        const msg = errorData.error || `HTTP ${res.status}: ${res.statusText}`;
+        if (res.status === 400) throw new Error(msg);
+        if (res.status === 403) throw new Error('Request blocked: origin not allowed.');
+        if (res.status === 429) throw new Error('Too many requests. Please try again later.');
+        throw new Error(msg);
       }
 
       form.reset();
@@ -215,6 +220,9 @@ const Contact = () => {
                       required
                     />
                   </div>
+                  {import.meta.env.VITE_TURNSTILE_SITEKEY && (
+                    <Turnstile className="mt-2" />
+                  )}
                   
                   <Button 
                     type="submit"
