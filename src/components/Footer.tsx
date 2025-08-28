@@ -120,51 +120,7 @@ const Footer = () => {
               ))}
             </div>
 
-            {/* Newsletter */}
-            <div>
-              <h5 className="font-medium mb-3 text-white">Stay Updated</h5>
-              <p className="text-gray-300 text-sm mb-3">
-                Subscribe to our newsletter for school updates and events.
-              </p>
-              <form
-                className="flex"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget;
-                  const input = form.querySelector('input[name="newsletterEmail"]');
-                  const email = (input && (input as HTMLInputElement).value || '').trim();
-                  if (!email) {
-                    alert('Please enter your email');
-                    return;
-                  }
-                  try {
-                    const resp = await fetch('/api/subscribe', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ email })
-                    });
-                    const data = await resp.json();
-                    if (!resp.ok) throw new Error(data?.error || 'Subscription failed');
-                    (input as HTMLInputElement).value = '';
-                    alert('Subscribed successfully!');
-                  } catch (err) {
-                    console.error('Subscribe error', err);
-                    alert('Failed to subscribe. Please try again later.');
-                  }
-                }}
-              >
-                <input
-                  name="newsletterEmail"
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 px-3 py-2 bg-gray-700 text-white text-sm rounded-l-lg border border-gray-600 focus:outline-none focus:border-sage"
-                  required
-                />
-                <button type="submit" className="px-4 py-2 bg-sage hover:bg-sage/90 text-white text-sm rounded-r-lg transition-colors duration-200">
-                  Subscribe
-                </button>
-              </form>
-            </div>
+
           </div>
         </div>
 
