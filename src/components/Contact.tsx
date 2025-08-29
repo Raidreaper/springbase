@@ -65,7 +65,10 @@ const Contact = () => {
         throw new Error("Please fill in all required fields");
       }
 
-      const res = await fetch(getApiUrl('/contact'), { 
+      // Hardcode local API during development
+      const apiUrl = getApiUrl('/contact');
+
+      const res = await fetch(apiUrl, { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify(payload) 

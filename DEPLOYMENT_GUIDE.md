@@ -1,68 +1,72 @@
 # Vercel Deployment Guide for Vite React App
 
-## 🚀 Quick Fix for Build Issues
+## 🚨 URGENT: Fix for Current Build Issue
 
-Your Vite app is failing to build on Vercel because of missing dependencies and configuration issues. Here's how to fix it:
+Your build is failing because of **duplicate dependencies** in `package.json`. I've fixed this issue.
 
-## ✅ What I Fixed
+## ✅ What I Just Fixed
 
-1. **Moved Build Dependencies**: Moved `vite`, `@vitejs/plugin-react`, `typescript`, `tailwindcss`, `postcss`, and `autoprefixer` from `devDependencies` to `dependencies`
-2. **Updated Vercel Config**: Added proper build configuration in `vercel.json`
-3. **Created Build Scripts**: Added alternative build methods
-4. **Added .vercelignore**: Excluded unnecessary files from deployment
+1. **Removed Duplicate Dependencies**: Cleaned up packages that appeared in both `dependencies` and `devDependencies`
+2. **Simplified Vite Config**: Removed complex configuration that might conflict with Vercel
+3. **Cleaned Vercel Config**: Simplified to use standard Vite deployment settings
+4. **Added Build Test**: Created test script to verify build works locally
 
-## 🔧 Manual Steps Required
+## 🔧 IMMEDIATE STEPS REQUIRED
 
-### 1. Update Dependencies
-Run this command locally to ensure all dependencies are properly installed:
+### 1. Test Build Locally First
 ```bash
 npm install
+npm run test:build
 ```
 
-### 2. Test Build Locally
-Test the build process locally before deploying:
-```bash
-npm run build
-```
-
-### 3. Commit and Push Changes
+### 2. If Local Build Succeeds, Deploy
 ```bash
 git add .
-git commit -m "Fix Vercel deployment configuration"
+git commit -m "Fix duplicate dependencies and simplify build config"
 git push origin main
 ```
 
-### 4. Redeploy on Vercel
+### 3. Redeploy on Vercel
 - Go to your Vercel dashboard
 - Select your project
-- Click "Redeploy" or trigger a new deployment from Git
+- Click "Redeploy" or trigger new deployment from Git
 
-## 🐛 Troubleshooting
+## 🐛 What Was Causing the Issue
 
-### If Build Still Fails:
+- **Duplicate Dependencies**: Same packages in both `dependencies` and `devDependencies`
+- **Complex Vite Config**: Unnecessary configuration that conflicted with Vercel
+- **Overcomplicated Vercel Config**: Too many build options causing conflicts
 
-1. **Check Vercel Logs**: Look at the build logs for specific error messages
-2. **Verify Dependencies**: Ensure all packages are in `dependencies`, not `devDependencies`
-3. **Clear Cache**: Try clearing Vercel's build cache
-4. **Use Alternative Build**: The `build:vercel` script as a fallback
+## 📋 Current Configuration
 
-### Common Issues:
+### package.json
+- All build dependencies properly placed in `dependencies`
+- No duplicate packages
+- Clean dependency structure
 
-- **"vite: command not found"**: Dependencies not properly installed
-- **"Module not found"**: Missing packages in production build
-- **"Build timeout"**: Increase `maxDuration` in `vercel.json`
+### vercel.json
+- Simple, standard Vite configuration
+- No complex build overrides
+- Standard output directory: `dist`
 
-## 📁 File Structure
+### vite.config.ts
+- Simplified configuration
+- No development-only plugins
+- Production-optimized build settings
 
-```
-├── api/
-│   ├── schedule-tour.js    # Tour booking API
-│   └── test.js            # Test endpoint
-├── src/                    # React source code
-├── vercel.json            # Vercel configuration
-├── package.json           # Dependencies and scripts
-├── vite.config.ts         # Vite configuration
-└── .vercelignore          # Files to exclude from deployment
+## 🧪 Testing Commands
+
+```bash
+# Test dependencies
+npm list vite
+npm list @vitejs/plugin-react
+npm list typescript
+
+# Test build
+npm run test:build
+
+# Standard build
+npm run build
 ```
 
 ## 🔑 Environment Variables
@@ -75,10 +79,19 @@ Don't forget to set these in Vercel:
 - `MAIL_FROM`
 - `SCHOOL_TO_EMAIL`
 
-## 📞 Support
+## 🚀 Expected Result
 
-If you continue having issues:
-1. Check Vercel's build logs
-2. Verify all dependencies are properly installed
-3. Test the build locally first
-4. Consider using the alternative build script: `npm run build:vercel`
+After these fixes:
+1. ✅ Local build should work: `npm run test:build`
+2. ✅ Vercel deployment should succeed
+3. ✅ Your tour booking form should work
+4. ✅ API endpoints should function properly
+
+## 📞 If Issues Persist
+
+1. **Check Vercel Logs**: Look for specific error messages
+2. **Verify Local Build**: Ensure `npm run test:build` works locally
+3. **Clear Vercel Cache**: Try clearing build cache in dashboard
+4. **Check Dependencies**: Ensure no packages are missing
+
+The build should now work properly on Vercel!

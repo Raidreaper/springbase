@@ -1,0 +1,40 @@
+import nodemailer from 'nodemailer';
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', process.env.APP_ORIGIN || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  try {
+    const { email } = req.body || {};
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'mail.springbase.com.ng',
+      port: parseInt(process.env.SMTP_PORT || '465'),
+      secure: true,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      tls: { rejectUnauthorized: false }
+    });
+
+    await transporter.verify();
+
+    const info = await transporter.sendMail({
+      from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
+      to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
+      replyTo: email,
+      subject: 'New Newsletter Subscription',
+      html: `<p>A new user subscribed to the newsletter.</p><p><strong>Email:</strong> ${email}</p>`,
+      text: `New newsletter subscription: ${email}`
+    });
+
+    return res.status(200).json({ success: true, message: 'Subscribed successfully', messageId: info?.messageId });
+  } catch (error) {
+    let errorMessage = 'Failed to subscribe';
+    if (error?.code === 'EAUTH') errorMessage = 'SMTP authentication failed';
+    if (error?.code === 'ECONNECTION') errorMessage = 'Could not connect to SMTP server';
+    return res.status(500).json({ error: errorMessage });
+  }
+}

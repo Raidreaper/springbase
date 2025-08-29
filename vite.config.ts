@@ -1,22 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }: { mode: string }) => ({
-  server: {
-    port: 3000,
-    host: true,
-    strictPort: true,
-    hmr: {
-      clientPort: 3000,
-    },
-  },
-  plugins: [
-    react(),
-    mode === 'development' && componentTagger(),
-  ].filter(Boolean),
+export default defineConfig({
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -24,6 +11,15 @@ export default defineConfig(({ mode }: { mode: string }) => ({
   },
   build: {
     outDir: "dist",
-    sourcemap: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   },
-}));
+  server: {
+    port: 3000,
+    host: true
+  }
+});

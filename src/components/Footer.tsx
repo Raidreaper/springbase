@@ -1,7 +1,15 @@
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import springbaseLogo from "@/assets/springbase-logo.png";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { getApiUrl } from "@/lib/api";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
   const quickLinks = [
     { name: "About Us", href: "#about" },
     { name: "Academic Programs", href: "#programs" },
@@ -26,6 +34,30 @@ const Footer = () => {
     { icon: <Instagram className="h-5 w-5" />, href: "#", label: "Instagram" },
     { icon: <Linkedin className="h-5 w-5" />, href: "#", label: "LinkedIn" }
   ];
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setSubmitting(true);
+    setStatus("idle");
+    try {
+      const res = await fetch(getApiUrl('/newsletter'), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error("Subscription failed");
+      setStatus("success");
+      setEmail("");
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      console.error("Newsletter subscribe error:", err);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <footer className="bg-charcoal text-white">
@@ -120,7 +152,33 @@ const Footer = () => {
               ))}
             </div>
 
-
+            {/* Newsletter Subscription */}
+            <div className="mt-6">
+              <h5 className="text-md font-semibold mb-3">Subscribe to our Newsletter</h5>
+              {status === "success" && (
+                <div className="mb-3 p-2 rounded bg-green-600/20 border border-green-600/30 text-sm text-green-200">
+                  Subscribed! We'll keep you updated.
+                </div>
+              )}
+              {status === "error" && (
+                <div className="mb-3 p-2 rounded bg-red-600/20 border border-red-600/30 text-sm text-red-200">
+                  Subscription failed. Please try again.
+                </div>
+              )}
+              <form onSubmit={handleSubscribe} className="flex space-x-2">
+                <Input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="bg-white/10 border-gray-600 placeholder:text-gray-400 text-white"
+                />
+                <Button type="submit" disabled={submitting} className="bg-sage hover:bg-sage/90 text-charcoal">
+                  {submitting ? 'Subscribing...' : 'Subscribe'}
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
 

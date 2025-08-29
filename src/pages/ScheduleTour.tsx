@@ -41,11 +41,17 @@ const ScheduleTourPage = () => {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch(getApiUrl("/schedule-tour"), {
+      // For local development, call the Express server directly
+      const apiUrl = import.meta.env.DEV 
+        ? 'http://localhost:3001/schedule-tour'  // Local Express server
+        : getApiUrl("/schedule-tour");           // Vercel API in production
+
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(apiPayload),
       });
+      
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         const msg = errorData.error || `HTTP ${res.status}: ${res.statusText}`;
@@ -54,7 +60,9 @@ const ScheduleTourPage = () => {
         if (res.status === 429) throw new Error('Too many requests. Please try again later.');
         throw new Error(msg);
       }
-      toast({ title: "Request received", description: "We emailed you a calendar invite and will confirm shortly." });
+      
+      const result = await res.json();
+      toast({ title: "Request received", description: result.message || "We emailed you a calendar invite and will confirm shortly." });
       form.reset();
     } catch (err) {
       console.error('Tour submission error:', err);
