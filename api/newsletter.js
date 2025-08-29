@@ -12,26 +12,25 @@ export default async function handler(req, res) {
     const { email } = req.body || {};
     if (!email) return res.status(400).json({ error: 'Email is required' });
 
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      return res.status(500).json({ error: 'Email service not configured' });
-    }
-
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'mail.springbase.com.ng',
-      port: parseInt(process.env.SMTP_PORT || '465'),
+      host: '185.234.21.198',
+      port: 465,
       secure: true,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: 'info@springbase.com.ng',
+        pass: ')4}gLAU0O,(VNrI1',
       },
-      tls: { rejectUnauthorized: false }
+      tls: { rejectUnauthorized: false },
+      connectionTimeout: 60000,
+      greetingTimeout: 60000,
+      socketTimeout: 60000,
     });
 
     await transporter.verify();
 
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
-      to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
+      from: 'Springbase Schools <info@springbase.com.ng>',
+      to: 'info@springbase.com.ng',
       replyTo: email,
       subject: 'New Newsletter Subscription',
       html: `<p>A new user subscribed to the newsletter.</p><p><strong>Email:</strong> ${email}</p>`,
@@ -43,6 +42,7 @@ export default async function handler(req, res) {
     let errorMessage = 'Failed to subscribe';
     if (error?.code === 'EAUTH') errorMessage = 'SMTP authentication failed';
     if (error?.code === 'ECONNECTION') errorMessage = 'Could not connect to SMTP server';
+    if (error?.code === 'ETIMEDOUT') errorMessage = 'Email service connection timeout';
     return res.status(500).json({ error: errorMessage });
   }
 }
