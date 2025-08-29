@@ -26,34 +26,6 @@ const SMTP_CONFIG = {
   socketTimeout: 60000
 };
 
-// Helper to build an ICS calendar event
-function buildIcsEvent({ uid, title, description, location, startUtc, endUtc, organizerEmail, attendeeEmail }) {
-  const dtStamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  const fmt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  return [
-    'BEGIN:VCALENDAR',
-    'PRODID:-//Springbase Schools//Tour Scheduler//EN',
-    'VERSION:2.0',
-    'CALSCALE:GREGORIAN',
-    'METHOD:REQUEST',
-    'BEGIN:VEVENT',
-    `UID:${uid}`,
-    `DTSTAMP:${dtStamp}`,
-    `DTSTART:${fmt(startUtc)}`,
-    `DTEND:${fmt(endUtc)}`,
-    `SUMMARY:${title}`,
-    `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
-    location ? `LOCATION:${location}` : 'LOCATION:Springbase Schools',
-    `ORGANIZER;CN=Springbase Schools:mailto:${organizerEmail}`,
-    attendeeEmail ? `ATTENDEE;CN=Parent;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:${attendeeEmail}` : '',
-    'STATUS:CONFIRMED',
-    'SEQUENCE:0',
-    'TRANSP:OPAQUE',
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].filter(Boolean).join('\r\n');
-}
-
 // Tour booking endpoint
 app.post('/schedule-tour', async (req, res) => {
   try {
@@ -65,12 +37,6 @@ app.post('/schedule-tour', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Parse date/time and build start/end in UTC (assume 1 hour duration)
-    const startLocal = new Date(`${preferredDate}T${String(preferredTime).padStart(5, '0')}:00`);
-    const endLocal = new Date(startLocal.getTime() + 60 * 60 * 1000);
-    const startUtc = new Date(startLocal.getTime());
-    const endUtc = new Date(endLocal.getTime());
-
     // Try to send email first
     let emailSent = false;
     let emailError = null;
@@ -81,11 +47,11 @@ app.post('/schedule-tour', async (req, res) => {
       // Test the connection
       await transporter.verify();
       console.log('SMTP connection verified successfully');
-
+      
       const html = `
-        <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">
-          <h2 style=\"color: #2c5530;\">New School Tour Request</h2>
-          <div style=\"background: #f9f9f9; padding: 20px; border-radius: 5px;\">
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2c5530;">New School Tour Request</h2>
+          <div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
             <h3>Parent Information</h3>
             <p><strong>Name:</strong> ${parentName}</p>
             <p><strong>Email:</strong> ${effectiveEmail}</p>
@@ -96,41 +62,20 @@ app.post('/schedule-tour', async (req, res) => {
             <h3>Tour Preferences</h3>
             <p><strong>Preferred Date:</strong> ${preferredDate}</p>
             <p><strong>Preferred Time:</strong> ${preferredTime}</p>
-            ${(additionalInfo || notes) ? `<h3>Additional Information</h3><div style=\"background: white; padding: 15px; border-left: 4px solid #2c5530;\">${(additionalInfo || notes).replace(/\n/g, '<br>')}</div>` : ''}
+            ${(additionalInfo || notes) ? `<h3>Additional Information</h3><div style="background: white; padding: 15px; border-left: 4px solid #2c5530;">${(additionalInfo || notes).replace(/\n/g, '<br>')}</div>` : ''}
           </div>
         </div>
       `;
 
-      const description = `Parent: ${parentName}\\nEmail: ${effectiveEmail}\\nPhone: ${effectivePhone || 'N/A'}\\nChild: ${childName || 'N/A'} (Age: ${childAge || 'N/A'})\\nNotes: ${(additionalInfo || notes) || 'None'}`;
-      const uid = `tour-${Date.now()}@springbase.com.ng`;
-      const icsContent = buildIcsEvent({
-        uid,
-        title: 'Campus Tour - Springbase Schools',
-        description,
-        location: 'Springbase Schools, 21 Canal View Off Community Road Ago, Okota Lagos',
-        startUtc,
-        endUtc,
-        organizerEmail: 'info@springbase.com.ng',
-        attendeeEmail: effectiveEmail
+      const info = await transporter.sendMail({
+        from: 'Springbase Schools <info@springbase.com.ng>',
+        to: 'info@springbase.com.ng',
+        replyTo: effectiveEmail,
+        subject: `School Tour Request - ${childName || parentName}`,
+        html
       });
 
-      const mailOptions = {
-        from: 'Springbase Schools <info@springbase.com.ng>',
-        to: ['info@springbase.com.ng', effectiveEmail],
-        replyTo: 'info@springbase.com.ng',
-        subject: `School Tour Request - ${childName || parentName} (${preferredDate} ${preferredTime})`,
-        html,
-        attachments: [
-          {
-            filename: 'springbase-tour.ics',
-            content: icsContent,
-            contentType: 'text/calendar; method=REQUEST; charset=UTF-8'
-          }
-        ]
-      };
-
-      const info = await transporter.sendMail(mailOptions);
-      console.log('Tour request email (with ICS) sent:', info.messageId);
+      console.log('Tour request email sent successfully:', info.messageId);
       emailSent = true;
       
     } catch (emailErr) {
@@ -155,12 +100,13 @@ app.post('/schedule-tour', async (req, res) => {
       emailError: emailError
     };
 
+    // In a real app, you'd save this to a database
     console.log('Tour request stored:', tourRequest);
     
     if (emailSent) {
       return res.status(200).json({ 
         success: true, 
-        message: 'Tour request submitted successfully and calendar invite sent to both parent and school.', 
+        message: 'Tour request submitted successfully and email sent!', 
         messageId: tourRequest.id 
       });
     } else {

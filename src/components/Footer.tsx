@@ -3,7 +3,6 @@ import springbaseLogo from "@/assets/springbase-logo.png";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { getApiUrl } from "@/lib/api";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -41,7 +40,8 @@ const Footer = () => {
     setSubmitting(true);
     setStatus("idle");
     try {
-      const res = await fetch(getApiUrl('/newsletter'), {
+      // Hardcoded local API for development
+      const res = await fetch("http://localhost:3001/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })

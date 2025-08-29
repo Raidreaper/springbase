@@ -1,32 +1,5 @@
 import nodemailer from 'nodemailer';
 
-function buildIcsEvent({ uid, title, description, location, startUtc, endUtc, organizerEmail, attendeeEmail }) {
-  const dtStamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  const fmt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  return [
-    'BEGIN:VCALENDAR',
-    'PRODID:-//Springbase Schools//Tour Scheduler//EN',
-    'VERSION:2.0',
-    'CALSCALE:GREGORIAN',
-    'METHOD:REQUEST',
-    'BEGIN:VEVENT',
-    `UID:${uid}`,
-    `DTSTAMP:${dtStamp}`,
-    `DTSTART:${fmt(startUtc)}`,
-    `DTEND:${fmt(endUtc)}`,
-    `SUMMARY:${title}`,
-    `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
-    location ? `LOCATION:${location}` : `LOCATION:${process.env.SCHOOL_ADDRESS || 'Springbase Schools'}`,
-    `ORGANIZER;CN=Springbase Schools:mailto:${organizerEmail}`,
-    attendeeEmail ? `ATTENDEE;CN=Parent;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:${attendeeEmail}` : '',
-    'STATUS:CONFIRMED',
-    'SEQUENCE:0',
-    'TRANSP:OPAQUE',
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].filter(Boolean).join('\r\n');
-}
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.APP_ORIGIN || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -39,37 +12,34 @@ export default async function handler(req, res) {
     const { parentName, parentEmail, parentPhone, childName, childAge, preferredDate, preferredTime, additionalInfo, email, phone, notes } = req.body || {};
     const effectiveEmail = parentEmail || email;
     const effectivePhone = parentPhone || phone;
+    
     if (!parentName || !effectiveEmail || !preferredDate || !preferredTime) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Use environment variables for SMTP (set SMTP_HOST to your direct IP on Vercel)
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'mail.springbase.com.ng',
       port: parseInt(process.env.SMTP_PORT || '465'),
       secure: true,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
       tls: { rejectUnauthorized: false }
     });
-    await transporter.verify();
 
-    // Build ICS
-    const startLocal = new Date(`${preferredDate}T${String(preferredTime).padStart(5, '0')}:00`);
-    const endLocal = new Date(startLocal.getTime() + 60 * 60 * 1000);
-    const startUtc = new Date(startLocal.getTime());
-    const endUtc = new Date(endLocal.getTime());
-
-    const description = `Parent: ${parentName}\nEmail: ${effectiveEmail}\nPhone: ${effectivePhone || 'N/A'}\nChild: ${childName || 'N/A'} (Age: ${childAge || 'N/A'})\nNotes: ${(additionalInfo || notes) || 'None'}`;
-    const uid = `tour-${Date.now()}@springbase.com.ng`;
-    const icsContent = buildIcsEvent({
-      uid,
-      title: 'Campus Tour - Springbase Schools',
-      description,
-      location: process.env.SCHOOL_ADDRESS || 'Springbase Schools',
-      startUtc,
-      endUtc,
-      organizerEmail: (process.env.MAIL_FROM?.match(/<(.+)>/)?.[1]) || 'info@springbase.com.ng',
-      attendeeEmail: effectiveEmail
-    });
+    // Test the connection
+    try {
+      await transporter.verify();
+      console.log('SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('SMTP connection verification failed:', verifyError);
+      return res.status(500).json({ 
+        error: 'Email service temporarily unavailable. Please try again later.',
+        details: verifyError.message
+      });
+    }
 
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -92,19 +62,44 @@ export default async function handler(req, res) {
 
     const info = await transporter.sendMail({
       from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
-      to: [process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng', effectiveEmail],
-      replyTo: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
-      subject: `School Tour Request - ${childName || parentName} (${preferredDate} ${preferredTime})`,
-      html,
-      attachments: [{ filename: 'springbase-tour.ics', content: icsContent, contentType: 'text/calendar; method=REQUEST; charset=UTF-8' }]
+      to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
+      replyTo: effectiveEmail,
+      subject: `School Tour Request - ${childName || parentName}`,
+      html
     });
 
-    return res.status(200).json({ success: true, message: 'Tour request submitted with calendar invite', messageId: info?.messageId });
+    console.log('Tour request email sent successfully:', info.messageId);
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Tour request submitted successfully', 
+      messageId: info?.messageId 
+    });
+    
   } catch (error) {
+    console.error('Schedule tour API error:', error);
+    
     let errorMessage = 'Failed to submit tour request';
-    if (error?.code === 'EAUTH') errorMessage = 'SMTP authentication failed';
-    if (error?.code === 'ECONNECTION') errorMessage = 'Could not connect to SMTP server';
-    return res.status(500).json({ error: errorMessage });
+    let statusCode = 500;
+    
+    if (error?.code === 'EAUTH') {
+      errorMessage = 'Email service authentication failed - check your username/password';
+      statusCode = 500;
+    } else if (error?.code === 'ECONNECTION') {
+      errorMessage = 'Could not connect to email service';
+      statusCode = 500;
+    } else if (error?.code === 'ENOTFOUND') {
+      errorMessage = 'Email service host not found';
+      statusCode = 500;
+    } else if (error?.code === 'ETIMEDOUT') {
+      errorMessage = 'Email service connection timeout';
+      statusCode = 500;
+    }
+    
+    return res.status(statusCode).json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }
 

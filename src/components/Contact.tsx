@@ -66,7 +66,7 @@ const Contact = () => {
       }
 
       // Hardcode local API during development
-      const apiUrl = getApiUrl('/contact');
+      const apiUrl = 'http://localhost:3001/contact';
 
       const res = await fetch(apiUrl, { 
         method: 'POST', 
