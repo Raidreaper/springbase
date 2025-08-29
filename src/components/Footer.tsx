@@ -3,6 +3,8 @@ import springbaseLogo from "@/assets/springbase-logo.png";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getApiUrl } from "@/lib/api";
+import { config } from "@/lib/config";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -40,8 +42,12 @@ const Footer = () => {
     setSubmitting(true);
     setStatus("idle");
     try {
-      // Hardcoded local API for development
-      const res = await fetch("http://localhost:3001/newsletter", {
+      // Use production API or local development server
+      const apiUrl = import.meta.env.DEV 
+        ? "http://localhost:3001/newsletter"  // Local Express server
+        : getApiUrl("/newsletter");           // Vercel API in production
+      
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
@@ -81,19 +87,19 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-gray-300">
                 <Phone className="h-4 w-4 text-sage" />
-                <a href="tel:+2347010821938" className="text-sm underline hover:text-sage">
-                  0701 082 1938
+                <a href={`tel:${config.contact.phone}`} className="text-sm underline hover:text-sage">
+                  {config.contact.phone}
                 </a>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <Mail className="h-4 w-4 text-sage" />
-                <a href="mailto:info@springbase.com.ng" className="text-sm underline hover:text-sage">
-                  info@springbase.com.ng
+                <a href={`mailto:${config.contact.email}`} className="text-sm underline hover:text-sage">
+                  {config.contact.email}
                 </a>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <MapPin className="h-4 w-4 text-sage" />
-                <span className="text-sm">21 Canal View Off Community Road Ago, Okota Lagos</span>
+                <span className="text-sm">{config.contact.address}</span>
               </div>
             </div>
           </div>

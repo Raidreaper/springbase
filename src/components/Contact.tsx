@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { getApiUrl } from "@/lib/api";
+import { config } from "@/lib/config";
 import Map from "./Map";
 import Turnstile from "./Turnstile";
 
@@ -17,13 +18,13 @@ const Contact = () => {
       icon: <Phone className="h-6 w-6" />,
       title: "Phone",
       details: (
-        <a href="tel:+2347010821938" className="underline text-sage hover:text-sage/80">
-          0701 082 1938
+        <a href={`tel:${config.contact.phone}`} className="underline text-sage hover:text-sage/80">
+          {config.contact.phone}
         </a>
       ),
       secondary: (
-        <a href="tel:+2347010821938" className="underline text-sage hover:text-sage/80">
-          Admissions: 0701 082 1938
+        <a href={`tel:${config.contact.phone}`} className="underline text-sage hover:text-sage/80">
+          Admissions: {config.contact.phone}
         </a>
       )
     },
@@ -31,22 +32,22 @@ const Contact = () => {
       icon: <Mail className="h-6 w-6" />,
       title: "Email",
       details: (
-        <a href="mailto:info@springbase.com.ng" className="underline text-sage hover:text-sage/80">
-          info@springbase.com.ng
+        <a href={`mailto:${config.contact.email}`} className="underline text-sage hover:text-sage/80">
+          {config.contact.email}
         </a>
       )
     },
     {
       icon: <MapPin className="h-6 w-6" />,
       title: "Address",
-      details: "21 Canal View Off Community Road Ago",
-      secondary: "Okota Lagos, Lagos State"
+      details: config.contact.address.split(',')[0],
+      secondary: config.contact.address.split(',')[1] + ', ' + config.contact.address.split(',')[2]
     },
     {
       icon: <Clock className="h-6 w-6" />,
       title: "Office Hours",
-      details: "Monday - Friday: 8:00 AM - 5:00 PM",
-      secondary: "Saturday: 9:00 AM - 2:00 PM"
+      details: config.contact.officeHours.weekdays,
+      secondary: config.contact.officeHours.saturday
     }
   ];
 
@@ -65,8 +66,10 @@ const Contact = () => {
         throw new Error("Please fill in all required fields");
       }
 
-      // Hardcode local API during development
-      const apiUrl = 'http://localhost:3001/contact';
+      // Use production API or local development server
+      const apiUrl = import.meta.env.DEV 
+        ? 'http://localhost:3001/contact'  // Local Express server
+        : getApiUrl("/contact");           // Vercel API in production
 
       const res = await fetch(apiUrl, { 
         method: 'POST', 

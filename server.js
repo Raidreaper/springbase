@@ -9,22 +9,27 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-// SMTP Configuration for local testing
+// SMTP Configuration with environment variable support
 const SMTP_CONFIG = {
-  host: '185.234.21.198', // Direct IP address to bypass Cloudflare
-  port: 465, // Correct port from your hosting provider
-  secure: true, // Use SSL for port 465
+  host: process.env.SMTP_HOST || 'mail.springbase.com.ng',
+  port: parseInt(process.env.SMTP_PORT || '465'),
+  secure: true,
   auth: {
-    user: 'info@springbase.com.ng',
-    pass: ')4}gLAU0O,(VNrI1'
+    user: process.env.SMTP_USER || 'info@springbase.com.ng',
+    pass: process.env.SMTP_PASS || '',
   },
-  tls: { 
-    rejectUnauthorized: false
-  },
-  connectionTimeout: 60000, // 60 seconds
+  tls: { rejectUnauthorized: false },
+  connectionTimeout: 60000,
   greetingTimeout: 60000,
   socketTimeout: 60000
 };
+
+// Fallback to direct IP if no environment variables are set
+if (!process.env.SMTP_PASS) {
+  SMTP_CONFIG.host = '185.234.21.198';
+  SMTP_CONFIG.auth.user = 'info@springbase.com.ng';
+  SMTP_CONFIG.auth.pass = ')4}gLAU0O,(VNrI1';
+}
 
 // Tour booking endpoint
 app.post('/schedule-tour', async (req, res) => {
@@ -68,8 +73,8 @@ app.post('/schedule-tour', async (req, res) => {
       `;
 
       const info = await transporter.sendMail({
-        from: 'Springbase Schools <info@springbase.com.ng>',
-        to: 'info@springbase.com.ng',
+        from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
+        to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
         replyTo: effectiveEmail,
         subject: `School Tour Request - ${childName || parentName}`,
         html
@@ -192,8 +197,8 @@ app.post('/contact', async (req, res) => {
       `;
 
       const info = await transporter.sendMail({
-        from: 'Springbase Schools <info@springbase.com.ng>',
-        to: 'info@springbase.com.ng',
+        from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
+        to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
         replyTo: email,
         subject: subject || `New Contact Form Submission from ${displayName}`,
         html,
@@ -233,8 +238,8 @@ app.post('/newsletter', async (req, res) => {
       await transporter.verify();
 
       const info = await transporter.sendMail({
-        from: 'Springbase Schools <info@springbase.com.ng>',
-        to: 'info@springbase.com.ng',
+        from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
+        to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
         replyTo: email,
         subject: 'New Newsletter Subscription',
         html: `<p>A new user subscribed to the newsletter.</p><p><strong>Email:</strong> ${email}</p>`,

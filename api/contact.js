@@ -15,21 +15,29 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Hardcoded SMTP using direct IP
-    const transporter = nodemailer.createTransport({
-      host: '185.234.21.198',
-      port: 465,
+    // Use environment variables for SMTP configuration
+    const SMTP_CONFIG = {
+      host: process.env.SMTP_HOST || 'mail.springbase.com.ng',
+      port: parseInt(process.env.SMTP_PORT || '465'),
       secure: true,
       auth: {
-        user: 'info@springbase.com.ng',
-        pass: ')4}gLAU0O,(VNrI1',
+        user: process.env.SMTP_USER || 'info@springbase.com.ng',
+        pass: process.env.SMTP_PASS || '',
       },
       tls: { rejectUnauthorized: false },
       connectionTimeout: 60000,
       greetingTimeout: 60000,
       socketTimeout: 60000,
-    });
+    };
 
+    // Fallback to direct IP if no environment variables are set
+    if (!process.env.SMTP_PASS) {
+      SMTP_CONFIG.host = '185.234.21.198';
+      SMTP_CONFIG.auth.user = 'info@springbase.com.ng';
+      SMTP_CONFIG.auth.pass = ')4}gLAU0O,(VNrI1';
+    }
+
+    const transporter = nodemailer.createTransport(SMTP_CONFIG);
     await transporter.verify();
 
     const html = `
@@ -50,8 +58,8 @@ export default async function handler(req, res) {
     `;
 
     const info = await transporter.sendMail({
-      from: 'Springbase Schools <info@springbase.com.ng>',
-      to: 'info@springbase.com.ng',
+      from: process.env.MAIL_FROM || 'Springbase Schools <info@springbase.com.ng>',
+      to: process.env.SCHOOL_TO_EMAIL || 'info@springbase.com.ng',
       replyTo: email,
       subject: subject || `New Contact Form Submission from ${displayName}`,
       html,

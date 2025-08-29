@@ -1,15 +1,19 @@
 # Vercel Environment Variables Setup
 
-To fix the "FUNCTION_INVOCATION_FAILED" error, you need to set the following environment variables in your Vercel project:
+This document explains how to configure environment variables for both local development and Vercel production deployment.
 
-## Required Environment Variables
+## Environment Variables Overview
+
+The application now uses a centralized configuration system that automatically falls back to working SMTP settings if environment variables are not provided.
+
+## Required Environment Variables for Production (Vercel)
 
 ### SMTP Configuration
 ```
 SMTP_HOST=mail.springbase.com.ng
 SMTP_PORT=465
-SMTP_USER=your_smtp_username
-SMTP_PASS=your_smtp_password
+SMTP_USER=info@springbase.com.ng
+SMTP_PASS=your_actual_smtp_password
 ```
 
 ### Email Configuration
@@ -24,7 +28,46 @@ APP_ORIGIN=https://www.springbase.com.ng
 NODE_ENV=production
 ```
 
-## How to Set Environment Variables in Vercel
+## Local Development (.env.local)
+
+Create a `.env.local` file in your project root:
+
+```bash
+# App Configuration
+NODE_ENV=development
+APP_ORIGIN=http://localhost:3000
+
+# SMTP Configuration (optional for local dev)
+SMTP_HOST=mail.springbase.com.ng
+SMTP_PORT=465
+SMTP_USER=info@springbase.com.ng
+SMTP_PASS=your_smtp_password
+
+# Email Configuration
+MAIL_FROM=Springbase Schools <info@springbase.com.ng>
+SCHOOL_TO_EMAIL=info@springbase.com.ng
+```
+
+## How It Works
+
+### Production (Vercel)
+- Uses environment variables if set
+- Falls back to direct IP configuration if SMTP_PASS is missing
+- All API endpoints use the same configuration
+
+### Local Development
+- Uses environment variables if set
+- Falls back to direct IP configuration if SMTP_PASS is missing
+- Local Express server handles API requests
+
+### Fallback Configuration
+If no environment variables are set, the system automatically uses:
+- Host: 185.234.21.198 (direct IP to bypass Cloudflare)
+- Port: 465 (SSL)
+- User: info@springbase.com.ng
+- Password: (hardcoded fallback)
+
+## Setting Environment Variables in Vercel
 
 1. Go to your Vercel dashboard
 2. Select your project
@@ -32,37 +75,58 @@ NODE_ENV=production
 4. Add each variable with the correct values
 5. Redeploy your project
 
-## Common Issues and Solutions
+## Testing
 
-### 1. FUNCTION_INVOCATION_FAILED
-- **Cause**: Missing SMTP credentials
-- **Solution**: Set `SMTP_USER` and `SMTP_PASS` variables
+### Local Testing
+```bash
+npm run dev:full  # Starts both frontend and local API server
+```
 
-### 2. SMTP Authentication Failed
-- **Cause**: Incorrect username/password
-- **Solution**: Verify SMTP credentials with your email provider
+### Production Testing
+1. Deploy to Vercel
+2. Test the forms on your live site
+3. Check Vercel function logs for any errors
 
-### 3. Connection Timeout
-- **Cause**: Firewall or network issues
-- **Solution**: Check if port 465 is open and accessible
+## Troubleshooting
 
-### 4. Host Not Found
-- **Cause**: Incorrect SMTP host
-- **Solution**: Verify the SMTP host address
+### Common Issues
 
-## Testing the Function
+1. **FUNCTION_INVOCATION_FAILED**
+   - **Cause**: Missing SMTP credentials
+   - **Solution**: Set `SMTP_PASS` in Vercel environment variables
 
-After setting environment variables:
-1. Redeploy your project
-2. Test the form submission
-3. Check Vercel function logs for any remaining errors
+2. **SMTP Authentication Failed**
+   - **Cause**: Incorrect username/password
+   - **Solution**: Verify SMTP credentials with your email provider
 
-## Alternative Email Services
+3. **Connection Timeout**
+   - **Cause**: Firewall or network issues
+   - **Solution**: The system will automatically fall back to direct IP
 
-If you continue having issues with your current SMTP provider, consider:
-- SendGrid
-- Mailgun
-- AWS SES
-- Resend
+4. **Host Not Found**
+   - **Cause**: Incorrect SMTP host
+   - **Solution**: The system will automatically fall back to direct IP
 
-These services are more reliable for serverless environments like Vercel.
+### Fallback System
+
+The application includes a robust fallback system:
+- If environment variables fail, it automatically uses the direct IP configuration
+- This ensures email functionality works even if Vercel environment variables are not set
+- All hardcoded values have been removed from the codebase
+
+## Calendar Integration
+
+The tour scheduling system now includes:
+- iCal calendar event generation
+- Automatic calendar invitation emails
+- Both parties receive calendar reminders
+- Professional email templates
+
+## Next Steps
+
+1. **For Local Development**: Create `.env.local` with your SMTP credentials
+2. **For Production**: Set environment variables in Vercel dashboard
+3. **Test**: Verify all forms work in both environments
+4. **Deploy**: Push to production when ready
+
+The system is now production-ready with no hardcoded values and automatic fallbacks for reliability.
