@@ -17,5 +17,22 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html",
+      "permanent": false
+    }
   ]
 }

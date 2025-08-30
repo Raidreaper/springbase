@@ -1,5 +1,14 @@
-# Handle client-side routing
+# Handle client-side routing for SPA
 /*    /index.html   200
 
 # API routes
 /api/*  /api/:splat  200
+
+# Specific page redirects
+/contact    /index.html   200
+/about      /index.html   200
+/programs   /index.html   200
+/facilities /index.html   200
+/admissions /index.html   200
+/student-life /index.html   200
+/schedule-tour /index.html   200
