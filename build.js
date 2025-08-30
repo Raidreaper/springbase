@@ -15,6 +15,15 @@ try {
   console.log('🔨 Building project...');
   execSync('npx vite build', { stdio: 'inherit' });
   
+  // Copy _redirects file to dist directory for Vercel
+  const redirectsSource = path.join(process.cwd(), 'public', '_redirects');
+  const redirectsDest = path.join(process.cwd(), 'dist', '_redirects');
+  
+  if (fs.existsSync(redirectsSource)) {
+    fs.copyFileSync(redirectsSource, redirectsDest);
+    console.log('✅ _redirects file copied to dist directory');
+  }
+  
   // Verify build output
   const distPath = path.join(process.cwd(), 'dist');
   if (fs.existsSync(distPath)) {
