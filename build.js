@@ -24,6 +24,15 @@ try {
     console.log('✅ _redirects file copied to dist directory');
   }
   
+  // Copy vercel.json from public to dist directory
+  const vercelSource = path.join(process.cwd(), 'public', 'vercel.json');
+  const vercelDest = path.join(process.cwd(), 'dist', 'vercel.json');
+  
+  if (fs.existsSync(vercelSource)) {
+    fs.copyFileSync(vercelSource, vercelDest);
+    console.log('✅ vercel.json copied to dist directory');
+  }
+  
   // Verify build output
   const distPath = path.join(process.cwd(), 'dist');
   if (fs.existsSync(distPath)) {
