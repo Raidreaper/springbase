@@ -196,6 +196,18 @@ const SEO = ({
           });
         `}
       </script>
+      
+      {/* Additional SEO Meta Tags */}
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="googlebot" content="index, follow" />
+      <meta name="bingbot" content="index, follow" />
+      <link rel="alternate" hrefLang="en" href={fullUrl} />
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="theme-color" content="#10B981" />
+      <meta name="msapplication-TileColor" content="#10B981" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      <meta name="apple-mobile-web-app-title" content="Springbase Schools" />
     </Helmet>
   );
 };
