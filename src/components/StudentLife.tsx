@@ -1,5 +1,6 @@
 import { Trophy, Music, Palette, Users, Globe, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import ImageModal from "@/components/ImageModal";
 
 const StudentLife = () => {
   const activities = [
@@ -134,6 +135,134 @@ const StudentLife = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Student Gallery Section */}
+        <div className="mt-16 fade-in">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-heading font-bold text-charcoal mb-4">
+              Our <span className="text-sage">Student Community</span>
+            </h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              See our students in action - learning, collaborating, and growing together in our vibrant school community.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
+            {/* Student Group Photos */}
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.43.01.jpeg"
+              alt="Student group photo"
+              title="Student Community"
+              description="Our vibrant student community showcasing diversity and unity"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.43.01.jpeg" 
+                alt="Student group photo" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.42.59.jpeg"
+              alt="Students in uniform"
+              title="School Uniforms"
+              description="Students proudly wearing their school uniforms, representing our values"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.42.59.jpeg" 
+                alt="Students in uniform" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.42.58.jpeg"
+              alt="Student group"
+              title="Student Groups"
+              description="Students working together in various group activities"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.42.58.jpeg" 
+                alt="Student group" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.43.00.jpeg"
+              alt="Students studying together"
+              title="Study Sessions"
+              description="Collaborative learning and peer-to-peer education"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.43.00.jpeg" 
+                alt="Students studying together" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            {/* Collaborative Study Images */}
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 08.58.31.jpeg"
+              alt="Students studying collaboratively"
+              title="Collaborative Learning"
+              description="Students engaged in hands-on collaborative study sessions"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 08.58.31.jpeg" 
+                alt="Students studying collaboratively" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.02.55.jpeg"
+              alt="Students in study group"
+              title="Study Groups"
+              description="Organized study groups promoting peer learning"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.02.55.jpeg" 
+                alt="Students in study group" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.02.56.jpeg"
+              alt="Students working together"
+              title="Teamwork"
+              description="Students developing teamwork skills through collaborative projects"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.02.56.jpeg" 
+                alt="Students working together" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+            
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-04 at 11.43.01 (1).jpeg"
+              alt="Student community"
+              title="School Community"
+              description="Our diverse and inclusive school community"
+              className="overflow-hidden rounded-xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-04 at 11.43.01 (1).jpeg" 
+                alt="Student community" 
+                className="w-full h-48 object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+          </div>
         </div>
 
         {/* Testimonial Section */}

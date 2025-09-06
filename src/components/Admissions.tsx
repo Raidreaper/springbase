@@ -1,6 +1,7 @@
 import { CheckCircle, Calendar, FileText, Users, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ImageModal from "@/components/ImageModal";
 
 const Admissions = () => {
   const steps = [
@@ -47,6 +48,34 @@ const Admissions = () => {
             Begin your child's journey toward knowledge and greatness. 
             Our admissions process is designed to ensure the best fit for every student.
           </p>
+        </div>
+
+        {/* Promotional Flyer */}
+        <div className="mb-16 fade-in">
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-heading font-bold text-charcoal mb-4">
+              <span className="text-sage">Admission Ongoing</span> - Join Us Today!
+            </h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Discover our comprehensive educational programs and state-of-the-art facilities
+            </p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <ImageModal
+              src="/images/WhatsApp Image 2025-09-05 at 15.11.21.jpeg"
+              alt="Springbase Schools Admission Flyer - Admission Ongoing"
+              title="Admission Ongoing - Springbase Schools"
+              description="Join our comprehensive educational programs including Nursery, Primary, and College levels. Programs include CHECKPOINT, CAMBRIDGE IGCSE, BECE, SSCE, and NECO."
+              className="overflow-hidden rounded-2xl shadow-2xl"
+            >
+              <img 
+                src="/images/WhatsApp Image 2025-09-05 at 15.11.21.jpeg" 
+                alt="Springbase Schools Admission Flyer - Admission Ongoing" 
+                className="w-full h-auto object-cover transition-transform group-hover:scale-105"
+              />
+            </ImageModal>
+          </div>
         </div>
 
         {/* Application Process */}

@@ -1,5 +1,6 @@
 import { Building, FlaskConical, Computer, TreePine, Utensils, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import ImageModal from "@/components/ImageModal";
 
 const Facilities = () => {
   const facilities = [
@@ -125,24 +126,58 @@ const Facilities = () => {
           </div>
 
           <div className="fade-in">
-            <div className="relative">
-              <div className="aspect-video rounded-2xl bg-gradient-to-br from-sage/20 to-lotus/20 p-6 card-elegant">
-                <div className="h-full rounded-xl bg-card flex items-center justify-center">
-                  <div className="text-center">
-                    <Building className="h-16 w-16 text-sage mx-auto mb-4" />
-                    <h4 className="text-2xl font-heading font-bold text-charcoal mb-2">
-                      Take a Virtual Tour
-                    </h4>
-                    <p className="text-muted-foreground">
-                      Explore our beautiful campus from anywhere
-                    </p>
-                  </div>
-                </div>
+            <div className="space-y-6">
+              {/* Science Laboratory Images */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ImageModal
+                  src="/images/WhatsApp Image 2025-09-04 at 11.43.01 (2).jpeg"
+                  alt="Students in state-of-the-art science laboratory"
+                  title="State-of-the-Art Science Laboratory"
+                  description="Students conducting advanced science experiments in our modern, fully equipped laboratory with professional-grade equipment"
+                  className="overflow-hidden rounded-xl"
+                >
+                  <img 
+                    src="/images/WhatsApp Image 2025-09-04 at 11.43.01 (2).jpeg" 
+                    alt="Students in state-of-the-art science laboratory" 
+                    className="w-full h-64 object-cover transition-transform group-hover:scale-105"
+                  />
+                </ImageModal>
+                
+                <ImageModal
+                  src="/images/WhatsApp Image 2025-09-04 at 11.43.00.jpeg"
+                  alt="Students engaged in hands-on laboratory work"
+                  title="Hands-on Laboratory Learning"
+                  description="Students actively engaged in practical laboratory experiments, developing critical thinking and scientific skills"
+                  className="overflow-hidden rounded-xl"
+                >
+                  <img 
+                    src="/images/WhatsApp Image 2025-09-04 at 11.43.00.jpeg" 
+                    alt="Students engaged in hands-on laboratory work" 
+                    className="w-full h-64 object-cover transition-transform group-hover:scale-105"
+                  />
+                </ImageModal>
               </div>
               
-              {/* Decorative elements */}
-              <div className="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-lotus/20 animate-pulse"></div>
-              <div className="absolute -bottom-3 -left-3 w-8 h-8 rounded-full bg-sage/20 animate-pulse delay-500"></div>
+              {/* Virtual Tour Section */}
+              <div className="relative">
+                <div className="aspect-video rounded-2xl bg-gradient-to-br from-sage/20 to-lotus/20 p-6 card-elegant">
+                  <div className="h-full rounded-xl bg-card flex items-center justify-center">
+                    <div className="text-center">
+                      <Building className="h-16 w-16 text-sage mx-auto mb-4" />
+                      <h4 className="text-2xl font-heading font-bold text-charcoal mb-2">
+                        Take a Virtual Tour
+                      </h4>
+                      <p className="text-muted-foreground">
+                        Explore our beautiful campus from anywhere
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Decorative elements */}
+                <div className="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-lotus/20 animate-pulse"></div>
+                <div className="absolute -bottom-3 -left-3 w-8 h-8 rounded-full bg-sage/20 animate-pulse delay-500"></div>
+              </div>
             </div>
           </div>
         </div>
