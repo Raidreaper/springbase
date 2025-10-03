@@ -23,9 +23,16 @@ const Contact = () => {
         </a>
       ),
       secondary: (
-        <a href={`tel:${config.contact.phone}`} className="underline text-sage hover:text-sage/80">
-          Admissions: {config.contact.phone}
-        </a>
+        <div className="space-y-1">
+          <a href={`tel:${config.contact.phone}`} className="underline text-sage hover:text-sage/80 block">
+            Admissions: {config.contact.phone}
+          </a>
+          {config.contact.principalPhone && (
+            <a href={`tel:${config.contact.principalPhone}`} className="underline text-sage hover:text-sage/80 block">
+              Principal: {config.contact.principalPhone}
+            </a>
+          )}
+        </div>
       )
     },
     {
@@ -205,7 +212,7 @@ const Contact = () => {
                     <label className="block text-sm font-medium text-charcoal mb-2">
                       Phone Number
                     </label>
-                    <Input name="phone" type="tel" placeholder="0701 082 1938" />
+                    <Input name="phone" type="tel" placeholder="0802 328 1221" />
                   </div>
                   
                   <div>

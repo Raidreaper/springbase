@@ -151,7 +151,7 @@ const Admissions = () => {
                   <h5 className="font-semibold text-charcoal mb-2">Admissions Contact</h5>
                   <div className="space-y-1 text-sm text-muted-foreground">
                     <div>Ask me about admissions: <span className="font-medium">Mrs OBANIWA</span>, Administrator</div>
-                    <div>Phone: <span className="font-medium">0701 082 1938</span></div>
+                    <div>Phone: <span className="font-medium">0802 328 1221</span></div>
                   </div>
                 </div>
               </CardContent>
@@ -180,7 +180,7 @@ const Admissions = () => {
                 
                 <div className="mt-6 text-center">
                   <p className="text-sm opacity-75">
-                    Questions? Call us at <a href="tel:+2347010821938" className="font-semibold underline">0701 082 1938</a>
+                    Questions? Call us at <a href="tel:+2348023281221" className="font-semibold underline">0802 328 1221</a>
                   </p>
                 </div>
               </CardContent>

@@ -33,9 +33,10 @@ export const config = {
   
   // Contact Information
   contact: {
-    phone: '+2347010821938',
+    phone: '+2348023281221',
+    principalPhone: '+2348020725415',
     email: 'info@springbase.com.ng',
-    address: '21 Canal View Off Community Road Ago, Okota Lagos, Lagos State',
+    address: '9/21 Canal View Off Community Road Ago, Okota Lagos, Lagos State',
     officeHours: {
       weekdays: 'Monday - Friday: 8:00 AM - 5:00 PM',
       saturday: 'Saturday: 9:00 AM - 2:00 PM'

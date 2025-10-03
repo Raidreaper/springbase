@@ -67,7 +67,7 @@ export default async function handler(req, res) {
       `DTEND:${formatDate(endDate)}`,
       `SUMMARY:Campus Tour - ${childName || 'Student'}`,
       `DESCRIPTION:Campus tour request from ${parentName} for ${childName || 'student'}. Contact: ${parentEmail}${parentPhone ? ` | Phone: ${parentPhone}` : ''}${additionalInfo ? ` | Notes: ${additionalInfo}` : ''}`,
-      `LOCATION:Springbase Schools, 21 Canal View Off Community Road Ago, Okota Lagos`,
+      `LOCATION:Springbase Schools, 9/21 Canal View Off Community Road Ago, Okota Lagos`,
       `ORGANIZER;CN=Springbase Schools:mailto:info@springbase.com.ng`,
       `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${parentEmail}`,
       `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED:mailto:info@springbase.com.ng`,
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
             ${additionalInfo ? `<p><strong>Additional Information:</strong> ${additionalInfo}</p>` : ''}
           </div>
           
-          <p>We will contact you within 24 hours to confirm your tour appointment. If you need to make any changes, please reply to this email or call us at <strong>0701 082 1938</strong>.</p>
+          <p>We will contact you within 24 hours to confirm your tour appointment. If you need to make any changes, please reply to this email or call us at <strong>0802 328 1221</strong>.</p>
           
           <p>We look forward to showing you around our campus!</p>
           
@@ -109,8 +109,8 @@ export default async function handler(req, res) {
         
         <div style="background: #f5f5f5; padding: 20px; text-align: center; color: #666;">
           <p style="margin: 0;">Springbase Schools<br>
-          21 Canal View Off Community Road Ago, Okota Lagos<br>
-          Phone: 0701 082 1938 | Email: info@springbase.com.ng</p>
+          9/21 Canal View Off Community Road Ago, Okota Lagos<br>
+          Phone: 0802 328 1221 | Email: info@springbase.com.ng</p>
         </div>
       </div>
     `;

@@ -120,7 +120,7 @@ const SEO = ({
             },
             {
               "@type": "ContactPoint",
-              "telephone": "+234-802-725-415",
+              "telephone": "+234-802-072-5415",
               "contactType": "General Inquiry",
               "availableLanguage": "English"
             },

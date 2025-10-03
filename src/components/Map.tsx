@@ -42,7 +42,7 @@ const Map = () => {
                 <div>
                   <h4 className="font-semibold text-charcoal">Address</h4>
                   <p className="text-sm text-muted-foreground">
-                    21 Canal View Off Community Road Ago,<br />
+                    9/21 Canal View Off Community Road Ago,<br />
                     Okota Lagos, Lagos State
                   </p>
                 </div>
@@ -90,7 +90,7 @@ const Map = () => {
               Get Directions
             </a>
             <a
-              href="tel:+2347010821938"
+              href="tel:+2348023281221"
               className="flex-1 bg-charcoal hover:bg-charcoal/90 text-white px-4 py-2 rounded-lg text-center font-medium transition-colors"
             >
               Call for Directions
