@@ -14,6 +14,7 @@ const AdmissionsPage = lazy(() => import("./pages/Admissions"));
 const StudentLifePage = lazy(() => import("./pages/StudentLife"));
 const ContactPage = lazy(() => import("./pages/Contact"));
 const ScheduleTourPage = lazy(() => import("./pages/ScheduleTour"));
+const GalleryPage = lazy(() => import("./pages/Gallery"));
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
               <Route path="/student-life" element={<StudentLifePage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/schedule-tour" element={<ScheduleTourPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

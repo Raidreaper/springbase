@@ -14,7 +14,8 @@
     "build:dev": "vite build --mode development",
     "build:production": "vite build --mode production",
     "preview": "vite preview",
-    "preview:production": "vite preview --port 4173 --host"
+    "preview:production": "vite preview --port 4173 --host",
+    "images:opt": "node scripts/optimize-images.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -88,6 +89,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
+    "sharp": "^0.34.4",
     "typescript-eslint": "^8.38.0"
   }
 }
