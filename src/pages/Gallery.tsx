@@ -12,6 +12,7 @@ const albumLabels: Record<string, string> = {
   parade: "Independence Day Parade",
   assemblies: "Assemblies & Welcome",
   staff: "Staff & Leadership",
+    "science-lab": "Science Lab",
 };
 
 const GalleryPage = () => {
@@ -49,18 +50,32 @@ const GalleryPage = () => {
             <TabsContent key={a} value={a} className="mt-6">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {(manifest?.albums[a] || []).map((item, idx) => {
-                  const src = item.files.find((f) => f.endsWith("-960.webp")) || item.files[0];
-                  const full = item.files.find((f) => f.endsWith(".webp")) || src;
+                  const srcWebp = item.files.find((f) => f.endsWith("-960.webp"))
+                    || item.files.find((f) => f.endsWith(".webp"))
+                    || item.files[0];
+                  const srcJpg = srcWebp
+                    ? srcWebp.replace(/\.webp$/, ".jpg")
+                    : (item.files.find((f) => f.endsWith("-960.jpg")) || item.files.find((f) => f.endsWith(".jpg")) || "");
+                  const full = item.files.find((f) => f.endsWith(".webp")) || srcWebp;
+                  if (!srcWebp && !srcJpg) return null;
                   return (
                     <Card key={idx} className="card-elegant bg-card border-0 overflow-hidden">
                       <CardContent className="p-0">
                         <a href={`/images/${full}`} target="_blank" rel="noreferrer">
-                          <img
-                            src={`/images/${src}`}
-                            alt="School activity photo"
-                            className="w-full h-44 object-cover hover:opacity-95 transition"
-                            loading="lazy"
-                          />
+                          <picture>
+                            {srcWebp && (
+                              <source srcSet={`/images/${srcWebp}`} type="image/webp" />
+                            )}
+                            {srcJpg && (
+                              <source srcSet={`/images/${srcJpg}`} type="image/jpeg" />
+                            )}
+                            <img
+                              src={`/images/${srcJpg || srcWebp}`}
+                              alt="School activity photo"
+                              className="w-full h-44 object-cover hover:opacity-95 transition"
+                              loading="lazy"
+                            />
+                          </picture>
                         </a>
                       </CardContent>
                     </Card>

@@ -9,11 +9,15 @@ const StudentLifePage = () => {
       <div className="space-y-12">
         {/* Parade hero */}
         <div className="rounded-3xl overflow-hidden shadow-sm">
-          <img 
-            src="/images/parade/c3fc96ba-e12b-42dc-9dff-1fe09753a95b-1920.webp" 
-            alt="Pupils in cultural attire waving Nigerian flags during a parade"
-            className="w-full h-[320px] md:h-[420px] object-cover"
-          />
+          <picture>
+            <source srcSet="/images/parade/c3fc96ba-e12b-42dc-9dff-1fe09753a95b-1920.webp" type="image/webp" />
+            <source srcSet="/images/parade/c3fc96ba-e12b-42dc-9dff-1fe09753a95b-1920.jpg" type="image/jpeg" />
+            <img 
+              src="/images/parade/c3fc96ba-e12b-42dc-9dff-1fe09753a95b-1920.jpg" 
+              alt="Pupils in cultural attire waving Nigerian flags during a parade"
+              className="w-full h-[320px] md:h-[420px] object-cover"
+            />
+          </picture>
         </div>
 
         <StudentLife />

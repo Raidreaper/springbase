@@ -31,6 +31,23 @@ const FacilitiesPage = () => {
             aspectRatio="video"
           />
         </div>
+
+        {/* Science Lab Preview */}
+        <div>
+          <ImageGallery 
+            title="Science Laboratory" 
+            description="Hands-on experiments and practical science learning"
+            images={[
+              "/images/science-lab/IMG_1709-960.webp",
+              "/images/science-lab/IMG_1711-960.webp"
+            ]}
+            columns={2}
+            aspectRatio="square"
+          />
+          <div className="text-right mt-2">
+            <a href="/gallery?album=science-lab" className="text-sage underline">See more</a>
+          </div>
+        </div>
         
         {/* Sports Facilities Gallery */}
         <ImageGallery 
